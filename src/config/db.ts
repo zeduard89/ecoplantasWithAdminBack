@@ -1,6 +1,9 @@
 import { Sequelize } from "sequelize-typescript"
 import dotenv from "dotenv"
 import AdminModel from "../models/AdminModel"
+import PlantasModel from "../models/PlantasModel"
+import MacetasModel from "../models/MacetasModel"
+import MaceterosModel from "../models/MaceterosModel"
 
 
 dotenv.config()
@@ -18,12 +21,12 @@ const sequelize = new Sequelize(
     },
     logging: false,
     native: false,
-    models: [AdminModel],
+    models: [AdminModel, PlantasModel,MacetasModel,MaceterosModel],
   }
 );
 
 sequelize.addModels([
-    AdminModel,
+    AdminModel,PlantasModel,MacetasModel,MaceterosModel
 ])
 
 // 1:1 Esto permite que un usuario tenga un perfil asociado.
@@ -34,9 +37,10 @@ sequelize.addModels([
 //! 1:N Esto permite que un usuario tenga múltiples proyectos asociados.
 // creatorId, es un atributo de ProjectModel y tarjetkey apunta al id del UserModel
 
-
-
 export {
   sequelize,
   AdminModel,
+  PlantasModel,
+  MacetasModel,
+  MaceterosModel
 }

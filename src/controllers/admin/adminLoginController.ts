@@ -26,7 +26,7 @@ const adminLoginController = async (adminData?: IAdmin): Promise<object> => {
     });
 
     if (!admin) {
-      throw new Error("Revisa las credenciales");
+      throw new Error("Email no registrado");
     }
 
     // Compara la contraseña proporcionada con la almacenada
@@ -38,7 +38,7 @@ const adminLoginController = async (adminData?: IAdmin): Promise<object> => {
     const token = jwt.sign(
       { tokenEmail: admin.email },
       secretKey,
-      { expiresIn: '2h' }
+      { expiresIn: '6h' }
     );
 
     return { ok: true, token };

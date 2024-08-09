@@ -101,5 +101,6 @@
       "resolveJsonModule": true /*TS no es capaz de importar un json, con esto le indico que quiero poder resolver este tipo de archivos */,
       "skipLibCheck": true /* Skip type checking all .d.ts files. */
     },
-    "include": ["src/**/*.ts", ".eslintrc.js", "src/middlewares/jwt.middleware.ts"]
+    "include": ["src/**/*.ts", ".eslintrc.js","src/middlewares/storage.ts", "src/middlewares/jwt.middleware.ts"],
+    "exclude": ["node_modules","build"]
   }

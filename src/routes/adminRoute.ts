@@ -6,7 +6,8 @@ import { verifyToken } from '../middlewares/jwt.middleware'
 
 const router = Router()
 
-router.get("/adminLogin", async (req: Request, res: Response) => {
+
+router.post("/adminLogin", async (req: Request, res: Response) => {
   try {
     const adminData: IAdmin | undefined = req.body;
     

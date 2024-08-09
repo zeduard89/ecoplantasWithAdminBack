@@ -1,40 +1,41 @@
-import { Model, Column, Table, DataType } from "sequelize-typescript"
-import { IAdmin } from "../types/types"
+import { Model, Column, Table, DataType, AutoIncrement, PrimaryKey } from "sequelize-typescript"
+import { IPlantas } from "../types/types"
+import { INTEGER } from "sequelize"
 
-@Table({ tableName: "admins", timestamps: true })
-export default class AdminModel extends Model<IAdmin> {
+@Table({ tableName: "plantas", timestamps: true })
+export default class PlantasModel extends Model<IPlantas> {
+  
+  @PrimaryKey
+  @AutoIncrement
   @Column({
-    type: DataType.UUID,
-    primaryKey: true,
+    type: INTEGER,
     allowNull: false,
-    defaultValue: DataType.UUIDV4
   })
-  id!: string
+  id!: number;
 
   @Column({
     type: DataType.STRING,
     allowNull: false
   })
-  userName!: string
+  title!: string
 
   @Column({
     type: DataType.STRING,
     allowNull: false
   })
-  lastName!: string
-
-  @Column({
-    type: DataType.STRING,
-    unique: true,
-    allowNull: false
-  })
-  email!: string
+  description!: string
 
   @Column({
     type: DataType.STRING,
     allowNull: false
   })
-  password!: string
+  category!: string
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false
+  })
+  imageUrl!: string
 
   @Column({
     type: DataType.DATE,
