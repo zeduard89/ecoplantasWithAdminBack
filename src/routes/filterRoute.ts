@@ -10,11 +10,12 @@ router.post("/filter",verifyToken, async (req: Request, res: Response) => {
   try {
       const filterData = req.body;
       const result: IFilterResponse = await filterController(filterData)
+      
       if(result.errorMessage){
-        res.status(400).send(result);
-        return
-      }
-      res.status(200).json(result.filterArray);
+          res.status(400).send(result);
+          return
+        }
+        res.status(200).json(result.filterArray);
     } catch (error) {
       const errorMessage =
         (error as Error).message
@@ -22,7 +23,7 @@ router.post("/filter",verifyToken, async (req: Request, res: Response) => {
     }
   })
 
-router.get("/getAll",verifyToken, async (_req: Request, res: Response) => {
+router.get("/getAll", async (_req: Request, res: Response) => {
   try {
       const result : IFilterResponse = await getAllController()
       if(result.errorMessage){
