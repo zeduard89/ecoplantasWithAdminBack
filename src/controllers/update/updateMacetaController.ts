@@ -1,9 +1,5 @@
 import { MacetasModel } from "../../config/db"
 import { IMacetas} from '../../types/types'
-import path from 'path';
-import fs from 'fs';
-const SERVER_URL = process.env.SERVER_URL;
-
 
 const updatePlantasController = async (macetasData?: IMacetas): Promise<object> => {
   try {
@@ -18,14 +14,6 @@ const updatePlantasController = async (macetasData?: IMacetas): Promise<object> 
     if(!macetaExist){
       throw new Error ('Id Inexistente');
     }
-    
-    // Opcional: Elimina la imagen antigua del sistema de archivos si es necesario
-    const imageToDelete = macetaExist.imageUrl.split(`${SERVER_URL}`)[1]
-    const filePath = path.resolve(__dirname, '..', '..', 'storage'+imageToDelete);
-    if(fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
-
 
     await macetaExist.update({
       title,

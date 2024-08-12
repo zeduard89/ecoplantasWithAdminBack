@@ -2,30 +2,33 @@ import { Request, Response, NextFunction } from 'express';
 import fs from 'fs';
 import sharp from 'sharp';
 
-// Middleware to validate image dimensions
+// Middleware que valida el tamano de la imagen
 export const validateDimensions = (req: Request, res: Response, next: NextFunction) : void => {
     
     let maxWidth: number;
     let maxHeight: number;
-    
-    const file = req.file as Express.Multer.File; // Asegúrate de que 'req.file' es del tipo correcto
-    if (!file) {
+    const file = req.file as Express.Multer.File;
+
+    // Si no se carga imagen y no existe URL de imagen anterior Tira Error
+    if (!file && !req.body.oldImageUrl) {
       res.status(400).send({errorMessage:'No se cargo una Imagen'});
       return 
+    }else if (req.body.oldImageUrl){
+      return next();
     }
 
-    switch (file.fieldname) {
-        case 'plantaImage':
-            maxWidth = 2000;
-            maxHeight = 2000;
-            break;
-        case 'macetaImage':
+    switch (req.body.category) {
+        case 'plantas':
             maxWidth = 1500;
             maxHeight = 1500;
             break;
-        case 'maceteroImage':
-            maxWidth = 1000;
-            maxHeight = 1000;
+        case 'macetas':
+            maxWidth = 1500;
+            maxHeight = 1500;
+            break;
+        case 'maceteros':
+            maxWidth = 1600;
+            maxHeight = 1700;
             break;
         default:
             return

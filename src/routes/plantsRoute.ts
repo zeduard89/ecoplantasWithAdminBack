@@ -8,13 +8,16 @@ import updatePlantasController from "../controllers/update/updatePlantasControll
 import getAllPlantsController from "../controllers/getAll/getAllPlantsController"
 import getPlantByIdController from '../controllers/getById/getPlantByIdController'
 
+import path from 'path';
+import fs from 'fs';
+
 const router = Router()
 
 const SERVER_URL = process.env.SERVER_URL;
 
 
 
-router.post("/uploadPlant",verifyToken, upload.single('plantaImage'), validateDimensions, async (req: Request, res: Response) => {
+router.post("/uploadPlant",verifyToken, upload.single('image'), validateDimensions, async (req: Request, res: Response) => {
   try {
       const plantData = req.body;
 
@@ -34,12 +37,24 @@ router.post("/uploadPlant",verifyToken, upload.single('plantaImage'), validateDi
     }
   })
 
-router.put("/updatePlant",verifyToken, upload.single('plantaImage'), validateDimensions, async (req: Request, res: Response) => {
+router.put("/updatePlant",verifyToken, upload.single('image'), validateDimensions, async (req: Request, res: Response) => {
   try {
 
     const plantData = req.body;
-  
-    plantData.imageUrl = `${SERVER_URL}/${req.file?.fieldname}/${req.file?.filename}`
+
+    if(!req.file || req.file === undefined){
+      plantData.imageUrl = req.body.oldImageUrl
+    }else{
+      plantData.imageUrl = `${SERVER_URL}/${req.file?.fieldname}/${req.file?.filename}`
+      
+      // Como existe una imagen en File, Borro la imagen anterior
+      const imageToDelete = plantData.imageUrl.split(`${SERVER_URL}`)[1]
+      const filePath = path.resolve(__dirname, '..', '..', 'storage'+imageToDelete);
+      if(fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+    
     const result: IErrrorMessage = await updatePlantasController(plantData )
           
     if(result.errorMessage){

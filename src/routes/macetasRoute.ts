@@ -8,17 +8,21 @@ import updateMacetaController from "../controllers/update/updateMacetaController
 import getAllMacetasController from "../controllers/getAll/getAllMacetasController"
 import getMacetaByIdController from "../controllers/getById/getMacetaByIdController"
 
+import path from 'path';
+import fs from 'fs';
+
 const router = Router()
 
 const SERVER_URL = process.env.SERVER_URL;
 
 
 
-router.post("/uploadMaceta",verifyToken, upload.single('macetaImage'), validateDimensions, async (req: Request, res: Response) => {
+router.post("/uploadMaceta",verifyToken, upload.single('image'), validateDimensions, async (req: Request, res: Response) => {
   try {
       const macetaData = req.body;
-      const imageUrl = `${SERVER_URL}/${req.file?.fieldname}/${req.file?.filename}`
-      macetaData.imageUrl = imageUrl
+
+      macetaData.imageUrl = `${SERVER_URL}/${req.file?.fieldname}/${req.file?.filename}`
+       
       const result: IErrrorMessage = await uploadMacetaController(macetaData)
         
       if(result.errorMessage){
@@ -33,12 +37,24 @@ router.post("/uploadMaceta",verifyToken, upload.single('macetaImage'), validateD
     }
   })
 
-router.put("/updateMaceta",verifyToken, upload.single('macetaImage'), validateDimensions, async (req: Request, res: Response) => {
+router.put("/updateMaceta",verifyToken, upload.single('image'), validateDimensions, async (req: Request, res: Response) => {
   try {
 
     const macetaData = req.body;
+
+    if(!req.file || req.file === undefined){
+      macetaData.imageUrl = req.body.oldImageUrl
+    }else{
+      macetaData.imageUrl = `${SERVER_URL}/${req.file?.fieldname}/${req.file?.filename}`
+      
+      // Borro la imagen anterior
+      const imageToDelete = macetaData.imageUrl.split(`${SERVER_URL}`)[1]
+      const filePath = path.resolve(__dirname, '..', '..', 'storage'+imageToDelete);
+      if(fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
   
-    macetaData.imageUrl = `${SERVER_URL}/${req.file?.fieldname}/${req.file?.filename}`
     const result: IErrrorMessage = await updateMacetaController(macetaData )
           
     if(result.errorMessage){

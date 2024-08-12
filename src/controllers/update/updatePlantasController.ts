@@ -1,8 +1,8 @@
 import { PlantasModel } from "../../config/db"
 import { IPlantas} from '../../types/types'
-import path from 'path';
-import fs from 'fs';
-const SERVER_URL = process.env.SERVER_URL;
+// import path from 'path';
+// import fs from 'fs';
+// const SERVER_URL = process.env.SERVER_URL;
 
 
 const updatePlantasController = async (plantData?: IPlantas): Promise<object> => {
@@ -18,16 +18,8 @@ const updatePlantasController = async (plantData?: IPlantas): Promise<object> =>
     if(!plantExist){
       throw new Error ('Id Inexistente');
     }
-    
-    // Opcional: Elimina la imagen antigua del sistema de archivos si es necesario
-    const imageToDelete = plantExist.imageUrl.split(`${SERVER_URL}`)[1]
-    const filePath = path.resolve(__dirname, '..', '..', 'storage'+imageToDelete);
-    if(fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
 
-
-    await plantExist.update({
+     await plantExist.update({
       title,
       description,
       imageUrl

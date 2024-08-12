@@ -8,17 +8,20 @@ import updateMaceterosController from "../controllers/update/updateMaceterosCont
 import getAllMaceterosController from "../controllers/getAll/getAllMaceterosController"
 import getMaceteroByIdController from "../controllers/getById/getMaceteroByIdController"
 
+import path from 'path';
+import fs from 'fs';
+
 const router = Router()
 
 const SERVER_URL = process.env.SERVER_URL;
 
 
 
-router.post("/uploadMacetero",verifyToken, upload.single('maceteroImage'), validateDimensions, async (req: Request, res: Response) => {
+router.post("/uploadMacetero",verifyToken, upload.single('image'), validateDimensions, async (req: Request, res: Response) => {
   try {
       const maceterosData = req.body;
-      const imageUrl = `${SERVER_URL}/${req.file?.fieldname}/${req.file?.filename}`
-      maceterosData.imageUrl = imageUrl
+      
+      maceterosData.imageUrl = `${SERVER_URL}/${req.file?.fieldname}/${req.file?.filename}`
       const result: IErrrorMessage = await uploadMaceterosController(maceterosData)
         
       if(result.errorMessage){
@@ -33,12 +36,24 @@ router.post("/uploadMacetero",verifyToken, upload.single('maceteroImage'), valid
     }
   })
   
-router.put("/updateMacetero",verifyToken, upload.single('maceteroImage'), validateDimensions, async (req: Request, res: Response) => {
+router.put("/updateMacetero",verifyToken, upload.single('image'), validateDimensions, async (req: Request, res: Response) => {
   try {
   
     const maceteroData = req.body;
     
-    maceteroData.imageUrl = `${SERVER_URL}/${req.file?.fieldname}/${req.file?.filename}`
+    if(!req.file || req.file === undefined){
+      maceteroData.imageUrl = req.body.oldImageUrl
+    }else{
+      maceteroData.imageUrl = `${SERVER_URL}/${req.file?.fieldname}/${req.file?.filename}`
+      
+      // Como existe una imagen en File, Borro la imagen anterior
+      const imageToDelete = maceteroData.imageUrl.split(`${SERVER_URL}`)[1]
+      const filePath = path.resolve(__dirname, '..', '..', 'storage'+imageToDelete);
+      if(fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+
     const result: IErrrorMessage = await updateMaceterosController(maceteroData )
             
     if(result.errorMessage){
