@@ -42,6 +42,7 @@ router.put("/updatePlant",verifyToken, upload.single('image'), validateDimension
 
     const plantData = req.body;
 
+    console.log(req.file?.fieldname, req.file?.filename)
     if(!req.file || req.file === undefined){
       plantData.imageUrl = req.body.oldImageUrl
     }else{
