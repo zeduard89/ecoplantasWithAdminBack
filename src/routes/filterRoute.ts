@@ -12,9 +12,9 @@ router.post("/filter",verifyToken, async (req: Request, res: Response) => {
       const result: IFilterResponse = await filterController(filterData)
       
       if(result.errorMessage){
-          res.status(400).send(result);
-          return
-        }
+        res.status(400).send(result);
+        return
+      }
         res.status(200).json(result.filterArray);
     } catch (error) {
       const errorMessage =

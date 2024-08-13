@@ -7,6 +7,7 @@ import uploadMacetaController from "../controllers/upload/uploadMacetasControlle
 import updateMacetaController from "../controllers/update/updateMacetaController"
 import getAllMacetasController from "../controllers/getAll/getAllMacetasController"
 import getMacetaByIdController from "../controllers/getById/getMacetaByIdController"
+import deleteMacetaByIdController from "../controllers/deleteById/deleteMacetaByIdController"
 
 import path from 'path';
 import fs from 'fs';
@@ -106,5 +107,23 @@ router.get("/getMaceta/:id",verifyToken, async (req: Request, res: Response) => 
     }
   })   
 
+  router.delete("/deleteMacetaById/:id",verifyToken, async (req: Request, res: Response) => {
+    try {
+        const MacetaId: number = parseInt(req.params.id)
+  
+        const result: IErrrorMessage = await deleteMacetaByIdController(MacetaId)
+            
+      if(result.errorMessage){
+        res.status(400).json(result);
+        return
+        }
+        res.status(200).json(result);
+        
+      } catch (error) {
+        const errorMessage =
+        (error as Error).message
+      res.status(400).send(errorMessage)
+      }
+    }) 
 
 export { router }

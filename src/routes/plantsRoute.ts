@@ -7,6 +7,7 @@ import uploadPlantasController from "../controllers/upload/uploadPlantasControll
 import updatePlantasController from "../controllers/update/updatePlantasController"
 import getAllPlantsController from "../controllers/getAll/getAllPlantsController"
 import getPlantByIdController from '../controllers/getById/getPlantByIdController'
+import deletePlantaByIdController from '../controllers/deleteById/deletePlantByIdController'
 
 import path from 'path';
 import fs from 'fs';
@@ -106,6 +107,25 @@ router.get("/getPlant/:id",verifyToken, async (req: Request, res: Response) => {
     res.status(400).send(errorMessage)
     }
   })
+
+  router.delete("/deletePlantabyId/:id",verifyToken, async (req: Request, res: Response) => {
+    try {
+        const plantaId: number = parseInt(req.params.id)
+  
+        const result: IErrrorMessage = await deletePlantaByIdController(plantaId)
+            
+      if(result.errorMessage){
+        res.status(400).json(result);
+        return
+        }
+        res.status(200).json(result);
+        
+      } catch (error) {
+        const errorMessage =
+        (error as Error).message
+      res.status(400).send(errorMessage)
+      }
+    }) 
 
 
 

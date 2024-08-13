@@ -7,6 +7,7 @@ import uploadMaceterosController from "../controllers/upload/uploadMaceterosCont
 import updateMaceterosController from "../controllers/update/updateMaceterosController"
 import getAllMaceterosController from "../controllers/getAll/getAllMaceterosController"
 import getMaceteroByIdController from "../controllers/getById/getMaceteroByIdController"
+import deleteMaceteroByIdController from '../controllers/deleteById/deleteMaceteroByIdController'
 
 import path from 'path';
 import fs from 'fs';
@@ -103,6 +104,25 @@ router.get("/getMacetero/:id",verifyToken, async (req: Request, res: Response) =
     res.status(400).send(errorMessage)
     }
   })
+
+  router.delete("/deleteMaceteroById/:id",verifyToken, async (req: Request, res: Response) => {
+    try {
+        const maceteroId: number = parseInt(req.params.id)
+  
+        const result: IErrrorMessage = await deleteMaceteroByIdController(maceteroId)
+            
+      if(result.errorMessage){
+        res.status(400).json(result);
+        return
+        }
+        res.status(200).json(result);
+        
+      } catch (error) {
+        const errorMessage =
+        (error as Error).message
+      res.status(400).send(errorMessage)
+      }
+    }) 
 
 
 export { router }
