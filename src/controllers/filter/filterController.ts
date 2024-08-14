@@ -4,6 +4,7 @@ import { IFilter, IPlantas, IMacetas, IMaceteros } from "../../types/types";
 const filterController = async (filterData: IFilter): Promise<object> => {
   try {
     let filterArray: object[] = [];
+    let emptyCatalogo = false;
     const { search, plantas, macetas, maceteros, filtrado } = filterData;
 
 
@@ -26,7 +27,7 @@ const filterController = async (filterData: IFilter): Promise<object> => {
           (item as IPlantas | IMacetas | IMaceteros).title?.includes(search) || 
         (item as IPlantas | IMacetas | IMaceteros).description?.includes(search)
       );
-    }
+      }
 
       // Ordenar los resultados según el parámetro 'filtrado'
       if (filtrado) {
@@ -44,7 +45,10 @@ const filterController = async (filterData: IFilter): Promise<object> => {
           filterArray = filterArray.filter((item) => (item as IPlantas | IMacetas | IMaceteros).createdAt && new Date() > oneYearAgo);
         }
       }
-      return {filterArray}
+      if(filterArray.length > 0){
+        emptyCatalogo = true
+      }
+      return {filterArray,emptyCatalogo}
     }
 
     // Al menos un input con valor TRUE------------------------
@@ -87,8 +91,10 @@ const filterController = async (filterData: IFilter): Promise<object> => {
         filterArray = filterArray.filter((item) => (item as IPlantas | IMacetas | IMaceteros).createdAt && new Date() > oneYearAgo);
       }
     }
-
-    return { filterArray };
+    if(filterArray.length > 0){
+      emptyCatalogo = true
+    }
+    return { filterArray, emptyCatalogo };
 
   } catch (error) {
     const errorMessage = (error as Error).message;

@@ -22,8 +22,7 @@ router.post("/uploadPlant",verifyToken, upload.single('image'), validateDimensio
   try {
       const plantData = req.body;
 
-      const imageUrl = `${SERVER_URL}/${req.file?.fieldname}/${req.file?.filename}`
-      plantData.imageUrl = imageUrl
+      plantData.imageUrl = `${SERVER_URL}/${plantData.category}/${req.file?.filename}`
       const result: IErrrorMessage = await uploadPlantasController(plantData)
         
       if(result.errorMessage){
@@ -43,15 +42,14 @@ router.put("/updatePlant",verifyToken, upload.single('image'), validateDimension
 
     const plantData = req.body;
 
-    console.log(req.file?.fieldname, req.file?.filename)
     if(!req.file || req.file === undefined){
       plantData.imageUrl = req.body.oldImageUrl
     }else{
-      plantData.imageUrl = `${SERVER_URL}/${req.file?.fieldname}/${req.file?.filename}`
-      
+      plantData.imageUrl = `${SERVER_URL}/${plantData.category}/${req.file?.filename}`
       // Como existe una imagen en File, Borro la imagen anterior
-      const imageToDelete = plantData.imageUrl.split(`${SERVER_URL}`)[1]
-      const filePath = path.resolve(__dirname, '..', '..', 'storage'+imageToDelete);
+      const imageToDelete = req.body.oldImageUrl.split(`${SERVER_URL}`)[1]
+      // __dirname , me posiciona en la carpeta "routes"
+      const filePath = path.resolve(__dirname, '..', 'storage'+imageToDelete);
       if(fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
       }

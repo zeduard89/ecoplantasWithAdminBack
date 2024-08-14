@@ -22,7 +22,7 @@ router.post("/uploadMacetero",verifyToken, upload.single('image'), validateDimen
   try {
       const maceterosData = req.body;
       
-      maceterosData.imageUrl = `${SERVER_URL}/${req.file?.fieldname}/${req.file?.filename}`
+      maceterosData.imageUrl = `${SERVER_URL}/${maceterosData.category}/${req.file?.filename}`
       const result: IErrrorMessage = await uploadMaceterosController(maceterosData)
         
       if(result.errorMessage){
@@ -45,11 +45,11 @@ router.put("/updateMacetero",verifyToken, upload.single('image'), validateDimens
     if(!req.file || req.file === undefined){
       maceteroData.imageUrl = req.body.oldImageUrl
     }else{
-      maceteroData.imageUrl = `${SERVER_URL}/${req.file?.fieldname}/${req.file?.filename}`
+      maceteroData.imageUrl = `${SERVER_URL}/${maceteroData.category}/${req.file?.filename}`
       
       // Como existe una imagen en File, Borro la imagen anterior
-      const imageToDelete = maceteroData.imageUrl.split(`${SERVER_URL}`)[1]
-      const filePath = path.resolve(__dirname, '..', '..', 'storage'+imageToDelete);
+      const imageToDelete = req.body.oldImageUrl.split(`${SERVER_URL}`)[1]
+      const filePath = path.resolve(__dirname, '..', 'storage'+imageToDelete);
       if(fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
       }
@@ -110,7 +110,7 @@ router.get("/getMacetero/:id",verifyToken, async (req: Request, res: Response) =
         const maceteroId: number = parseInt(req.params.id)
   
         const result: IErrrorMessage = await deleteMaceteroByIdController(maceteroId)
-            
+        
       if(result.errorMessage){
         res.status(400).json(result);
         return

@@ -1,6 +1,9 @@
 import { PlantasModel, MacetasModel, MaceterosModel } from "../../config/db";
 
 const getAllController = async (): Promise<object> => {
+
+  let emptyCatalogo = false;
+
   try {
     let filterArray: object[] = [];
 
@@ -13,7 +16,11 @@ const getAllController = async (): Promise<object> => {
     const maceterosArray = await MaceterosModel.findAll();
     filterArray = [...filterArray, ...maceterosArray];
 
-    return { filterArray };
+    if(filterArray.length > 0){
+      emptyCatalogo = true
+    }
+
+    return { filterArray, emptyCatalogo };
 
   } catch (error) {
     const errorMessage = (error as Error).message;

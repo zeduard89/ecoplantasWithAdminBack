@@ -10,11 +10,15 @@ const uploadMaceterosController = async (maceterosData?: IMaceteros): Promise<ob
     let {title,description,category,base,altura,largo,imageUrl} = maceterosData
 
     if (!title) {
-      throw new Error('Datos incompletos: title');}
+      throw new Error('Datos incompletos: Titulo');}
     if(!description){
       description=''}
     if(!imageUrl){
       throw new Error('Datos incompletos: imagen');}
+      if(base === '0' || base === ''){
+        base = '20'}
+        
+    
     
     const maceteroExist = await MaceterosModel.findOne({
       where:{title}

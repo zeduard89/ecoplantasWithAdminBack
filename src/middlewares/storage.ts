@@ -3,11 +3,13 @@ import path from 'path';
 import fs from 'fs';
 import multer, { StorageEngine } from 'multer';
 
+
 // Define storage configuration for multer
 const storage: StorageEngine = multer.diskStorage({
-  destination: function (_req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
+  destination: function (req: Request, _file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
+    const category = req.body.category 
     // Direccion de carpeta para almacenar la img + control si existe
-    const imagesPath = path.resolve(__dirname, '../storage', `${file.fieldname}`);
+    const imagesPath = path.resolve(__dirname, `../storage/${category}`);
     if (!fs.existsSync(imagesPath)) {
       fs.mkdirSync(imagesPath, { recursive: true });
     }

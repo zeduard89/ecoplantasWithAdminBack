@@ -22,7 +22,7 @@ router.post("/uploadMaceta",verifyToken, upload.single('image'), validateDimensi
   try {
       const macetaData = req.body;
 
-      macetaData.imageUrl = `${SERVER_URL}/${req.file?.fieldname}/${req.file?.filename}`
+      macetaData.imageUrl = `${SERVER_URL}/${macetaData.category}/${req.file?.filename}`
        
       const result: IErrrorMessage = await uploadMacetaController(macetaData)
         
@@ -46,11 +46,10 @@ router.put("/updateMaceta",verifyToken, upload.single('image'), validateDimensio
     if(!req.file || req.file === undefined){
       macetaData.imageUrl = req.body.oldImageUrl
     }else{
-      macetaData.imageUrl = `${SERVER_URL}/${req.file?.fieldname}/${req.file?.filename}`
-      
+      macetaData.imageUrl = `${SERVER_URL}/${macetaData.category}/${req.file?.filename}`
       // Borro la imagen anterior
-      const imageToDelete = macetaData.imageUrl.split(`${SERVER_URL}`)[1]
-      const filePath = path.resolve(__dirname, '..', '..', 'storage'+imageToDelete);
+      const imageToDelete = req.body.oldImageUrl.split(`${SERVER_URL}`)[1]
+      const filePath = path.resolve(__dirname, '..', 'storage'+imageToDelete);
       if(fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
       }

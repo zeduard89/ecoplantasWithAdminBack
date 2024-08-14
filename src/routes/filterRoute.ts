@@ -30,7 +30,7 @@ router.get("/getAll", async (_req: Request, res: Response) => {
         res.status(400).send(result);
         return
       }
-      res.status(200).json(result.filterArray);
+      res.status(200).json(result);
     } catch (error) {
       const errorMessage =
         (error as Error).message
