@@ -1,5 +1,8 @@
 import { MaceterosModel } from "../../config/db"
 import { IMaceteros} from '../../types/types'
+import fs from 'fs';
+import path from 'path';
+const SERVER_URL = process.env.SERVER_URL;
 
 const uploadMaceterosController = async (maceterosData?: IMaceteros): Promise<object> => {
   try {
@@ -24,6 +27,11 @@ const uploadMaceterosController = async (maceterosData?: IMaceteros): Promise<ob
       where:{title}
     })
     if(maceteroExist){
+      const imageToDelete = imageUrl.split(`${SERVER_URL}`)[1]
+      const filePath = path.resolve(__dirname,'..', '..', 'storage'+imageToDelete);
+      if(fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
       throw new Error ('Macetero Existente');
     }
 

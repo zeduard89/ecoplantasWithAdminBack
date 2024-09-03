@@ -1,5 +1,8 @@
 import { MacetasModel } from "../../config/db"
 import { IMacetas} from '../../types/types'
+import fs from 'fs';
+import path from 'path';
+const SERVER_URL = process.env.SERVER_URL;
 
 const uploadMacetasController = async (macetasData?: IMacetas): Promise<object> => {
   try {
@@ -20,6 +23,11 @@ const uploadMacetasController = async (macetasData?: IMacetas): Promise<object> 
       where:{title}
     })
     if(macetaExist){
+      const imageToDelete = imageUrl.split(`${SERVER_URL}`)[1]
+      const filePath = path.resolve(__dirname,'..', '..', 'storage'+imageToDelete);
+      if(fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
       throw new Error ('Maceta Existente');
     }
 

@@ -25,10 +25,10 @@ const uploadPlantasController = async (plantData?: IPlantas): Promise<object> =>
     })
     if(plantExist){
       const imageToDelete = imageUrl.split(`${SERVER_URL}`)[1]
-    const filePath = path.resolve(__dirname,'..', '..', 'storage'+imageToDelete);
-    if(fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
+      const filePath = path.resolve(__dirname,'..', '..', 'storage'+imageToDelete);
+      if(fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
       throw new Error ('Planta Existente');
     }
 
