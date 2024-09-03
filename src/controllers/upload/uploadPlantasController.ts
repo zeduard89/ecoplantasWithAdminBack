@@ -1,5 +1,9 @@
 import { PlantasModel } from "../../config/db"
 import { IPlantas} from '../../types/types'
+import fs from 'fs';
+import path from 'path';
+const SERVER_URL = process.env.SERVER_URL;
+
 
 const uploadPlantasController = async (plantData?: IPlantas): Promise<object> => {
   try {
@@ -20,6 +24,11 @@ const uploadPlantasController = async (plantData?: IPlantas): Promise<object> =>
       where:{title}
     })
     if(plantExist){
+      const imageToDelete = imageUrl.split(`${SERVER_URL}`)[1]
+    const filePath = path.resolve(__dirname,'..', '..', 'storage'+imageToDelete);
+    if(fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
       throw new Error ('Planta Existente');
     }
 

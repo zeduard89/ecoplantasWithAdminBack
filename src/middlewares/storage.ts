@@ -3,7 +3,6 @@ import path from 'path';
 import fs from 'fs';
 import multer, { StorageEngine } from 'multer';
 
-
 // Define storage configuration for multer
 const storage: StorageEngine = multer.diskStorage({
   destination: function (req: Request, _file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
@@ -16,8 +15,11 @@ const storage: StorageEngine = multer.diskStorage({
     cb(null, imagesPath);
   },
   filename: function (_req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
-    const ext = path.extname(file.originalname)
-    cb(null, `${Date.now()}${ext}`);
+
+    const ext = path.extname(file.originalname);
+    const filename = `${Date.now()}.${ext}`;
+    cb(null, filename);
+
   }
 });
 

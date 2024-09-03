@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express"
+import { Router, Request, Response} from "express"
 import { IErrrorMessage } from "../types/types"
 import { verifyToken } from '../middlewares/jwt.middleware'
 import { upload } from '../middlewares/storage'
@@ -124,7 +124,6 @@ router.get("/getPlant/:id",verifyToken, async (req: Request, res: Response) => {
       res.status(400).send(errorMessage)
       }
     }) 
-
 
 
 export { router }
