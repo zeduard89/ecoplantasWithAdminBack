@@ -1,26 +1,23 @@
-name: Deploy Database
+name: Deploy on Push
 
 on:
   push:
     branches:
-      - main # o la rama que uses para despliegues
+      - '*' # Escucha cambios en cualquier rama
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up MySQL
-      uses: shogo82148/actions-setup-mysql@v1
-      with:
-        mysql-version: '8.0'
-        mysql-database: ${{ secrets.DB_NAME }}
-        mysql-user: ${{ secrets.DB_USER }}
-        mysql-password: ${{ secrets.DB_PASSWORD }}
+      - name: Setup MySQL
+        uses: shogo82148/actions-setup-mysql@v1
+        with:
+          mysql-version: '8.0'
+          root-password: ${{ secrets.MYSQL_ROOT_PASSWORD }}
 
-    - name: Run database migrations
-      run: |
-        mysql -h localhost -u ${{ secrets.DB_USER }} -p${{ secrets.DB_PASSWORD }} ${{ secrets.DB_NAME }} < path/to/your/migration.sql
+      - name: Run migration
+        run: |
+          mysql -h localhost -u root -p${{ secrets.MYSQL_ROOT_PASSWORD }} my_database < ./migrations/migration.sql
