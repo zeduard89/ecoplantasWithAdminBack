@@ -9,18 +9,6 @@
     "build": "tsc",
     "tsc": "tsc"
   },
-  "builds":[
-    {
-    "src": "./src/index.ts",
-    "use": "@vercel/node"
-    }
-  ],
-  "routes":[
-    {
-      "src": "/(.*)",
-      "dest": "/"
-    }
-  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
