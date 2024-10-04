@@ -11,7 +11,6 @@ import { router } from "../routes/index"
 
 dotenv.config()
 const  {FRONT_URL}  = process.env;
-console.log(FRONT_URL)
 const server = express()
 server.use(
   cors({
