@@ -4,11 +4,14 @@ import bodyParser from "body-parser"
 import morgan from "morgan"
 import cors from "cors"
 import path from "path"
+import dotenv from "dotenv"
 
 // Importacion de Rutas Dinamicas
 import { router } from "../routes/index"
 
-const  FRONT_URL  = process.env.FRONT_URL;
+dotenv.config()
+const  {FRONT_URL}  = process.env;
+console.log(FRONT_URL)
 const server = express()
 server.use(
   cors({
