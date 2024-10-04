@@ -8,12 +8,12 @@ import path from "path"
 // Importacion de Rutas Dinamicas
 import { router } from "../routes/index"
 
+const  FRONT_URL  = process.env.FRONT_URL;
 const server = express()
-
 server.use(
   cors({
-    origin: "*", // Permitir acceso desde cualquier origen
-    credentials: true
+    origin: FRONT_URL,
+    credentials: true 
   })
 )
 
