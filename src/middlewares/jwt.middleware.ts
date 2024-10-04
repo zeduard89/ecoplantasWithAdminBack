@@ -24,6 +24,6 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) : v
         next();
     } catch (error) {
         const errorMessage = (error as Error).message;
-        res.status(400).json({ error: 'Token Incorrecto' || errorMessage });
+        res.status(400).json({ error: errorMessage || 'Token Incorrecto' });
     }
 };

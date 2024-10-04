@@ -5,7 +5,6 @@ import PlantasModel from "../models/PlantasModel"
 import MacetasModel from "../models/MacetasModel"
 import MaceterosModel from "../models/MaceterosModel"
 
-
 dotenv.config()
 
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME,DB_PORT } = process.env;
@@ -16,16 +15,15 @@ const sequelize = new Sequelize({
   password: DB_PASSWORD,
   database: DB_NAME,
   port: parseInt(DB_PORT || '3306', 10),
-  dialectOptions: {
-    
-  },
-  logging: false,
+  logging: console.log, // Activa el logging para ver errores en la consola
   models: [AdminModel, PlantasModel, MacetasModel, MaceterosModel],
 });
+
 
 sequelize.addModels([
     AdminModel,PlantasModel,MacetasModel,MaceterosModel
 ])
+
 
 
 export {
