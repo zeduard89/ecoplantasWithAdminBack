@@ -6,7 +6,7 @@
     "lint": "ts-standard",
     "start": "node server.ts",
     "dev": "ts-node-dev src/index.ts",
-    "build": "tsc && xcopy src\\public dist\\public /E /I",
+    "build": "tsc && mkdir dist\\public && copy src\\public dist\\public /E /I",
     "tsc": "tsc"
   },
   "keywords": [],
