@@ -15,9 +15,12 @@ const server = express()
 server.use(
   cors({
     origin: FRONT_URL,
+    methods:["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true 
   })
 )
+
+server.options("*", cors());
 
 server.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }))
 server.use(bodyParser.json({ limit: "50mb" }))
