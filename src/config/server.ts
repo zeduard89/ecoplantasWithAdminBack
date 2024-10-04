@@ -35,6 +35,10 @@ server.use("/index",(_req,res)=>{
   res.sendFile(path.join(__dirname,'../../views/index.html')); // Serve the HTML file directly
 })
 
+server.get('/', (_req, res) => {
+  res.send('Servidor está funcionando correctamente.'); 
+});
+
 // Routes
 server.use("/", router)
 
