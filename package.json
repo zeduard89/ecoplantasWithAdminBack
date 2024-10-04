@@ -6,9 +6,21 @@
     "lint": "ts-standard",
     "start": "node server.ts",
     "dev": "ts-node-dev src/index.ts",
-    "build": "tsc && mkdir dist\\public && copy src\\public dist\\public /E /I",
+    "build": "tsc",
     "tsc": "tsc"
   },
+  "builds":[
+    {
+    "src": "./src/index.ts",
+    "use": "@vercel/node"
+    }
+  ],
+  "routes":[
+    {
+      "src": "/(.*)",
+      "dest": "/"
+    }
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
