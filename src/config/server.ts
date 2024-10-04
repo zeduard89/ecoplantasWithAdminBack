@@ -11,6 +11,8 @@ import { router } from "../routes/index"
 
 dotenv.config()
 const  {FRONT_URL}  = process.env;
+console.log("FRONT_URL:", FRONT_URL);
+
 const server = express()
 server.use(
   cors({
@@ -45,11 +47,11 @@ server.use("/", router)
 // Error catching middleware.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
-  const status: number = err.status !== undefined ? err.status : 500
-  const message: string = err.message !== undefined ? err.message : String(err)
-  console.error(err)
-  res.status(status).send(message)
-}
+  const status: number = err.status !== undefined ? err.status : 500;
+  const message: string = err.message !== undefined ? err.message : String(err);
+  console.error(err);
+  res.status(status).json({ status, message }); // Respuesta en formato JSON
+};
 
 server.use(errorHandler)
 
