@@ -7,18 +7,22 @@ import MaceterosModel from "../models/MaceterosModel"
 
 dotenv.config()
 
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME,DB_PORT } = process.env;
-const sequelize = new Sequelize({
-  dialect: "mysql",
-  host: DB_HOST,
-  username: DB_USER,
-  password: DB_PASSWORD,
-  database: DB_NAME,
-  port: parseInt(DB_PORT || '3306', 10),
-  logging: console.log, // Activa el logging para ver errores en la consola
-  models: [AdminModel, PlantasModel, MacetasModel, MaceterosModel],
-});
-
+const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, NODE_ENV } = process.env;
+const sequelize = new Sequelize(
+  `postgres://${DB_USER ?? ""}:${DB_PASSWORD ?? ""}@${DB_HOST ?? ""}/${DB_NAME ?? ""}`,
+  {
+    dialect: "postgres",
+    dialectOptions: {
+      ssl: NODE_ENV === 'production' ? {
+        require: true,
+        rejectUnauthorized: false // Solo si estás usando un certificado autofirmado
+      } : false
+    },
+    logging: false,
+    native: false,
+    models: [AdminModel, PlantasModel,MacetasModel,MaceterosModel],
+  }
+);
 
 sequelize.addModels([
     AdminModel,PlantasModel,MacetasModel,MaceterosModel
