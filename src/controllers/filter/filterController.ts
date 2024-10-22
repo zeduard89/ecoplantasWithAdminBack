@@ -20,13 +20,19 @@ const filterController = async (filterData: IFilter): Promise<object> => {
         const maceterosArray = await MaceterosModel.findAll();
         filterArray = [...filterArray, ...maceterosArray];
 
-
       // Filtrar resultados basado en el parámetro 'search'
       if (search) {
-        filterArray = filterArray.filter((item) => 
-          (item as IPlantas | IMacetas | IMaceteros).title?.includes(search) || 
-        (item as IPlantas | IMacetas | IMaceteros).description?.includes(search)
-      );
+        // Eliminar espacios de la cadena de búsqueda
+        const searchTerm = search.replace(/\s+/g, '').toLowerCase();
+
+        filterArray = filterArray.filter((item) => {
+          // Obtener el título y la descripción, eliminando espacios
+          const title = (item as IPlantas | IMacetas | IMaceteros).title?.replace(/\s+/g, '').toLowerCase() || '';
+          const description = (item as IPlantas | IMacetas | IMaceteros).description?.replace(/\s+/g, '').toLowerCase() || '';
+
+          // Verificar si la cadena de búsqueda está presente en el título o la descripción
+          return title.includes(searchTerm) || description.includes(searchTerm);
+        });
       }
 
       // Ordenar los resultados según el parámetro 'filtrado'

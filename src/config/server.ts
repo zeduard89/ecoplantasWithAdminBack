@@ -17,7 +17,8 @@ server.use(
   cors({
     origin: FRONT_URL,
     methods:["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true 
+    credentials: true,
+    optionsSuccessStatus: 204 
   })
 )
 
