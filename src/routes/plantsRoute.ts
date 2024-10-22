@@ -56,12 +56,14 @@ router.put("/updatePlant",verifyToken, upload.single('image'), validateDimension
     }
     
     const result: IErrrorMessage = await updatePlantasController(plantData )
-          
+
     if(result.errorMessage){
       res.status(400).json(result);
       return
       }
-      res.status(200).json(true);
+       res.status(200).json(result);
+
+      
       
     } catch (error) {
       const errorMessage =

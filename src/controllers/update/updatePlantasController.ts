@@ -12,20 +12,29 @@ const updatePlantasController = async (plantData?: IPlantas): Promise<object> =>
     }
 
     const {id,title,description, imageUrl} = plantData
+        
+    const plantExist = await PlantasModel.findOne({
+      where:{
+        title
+      }
+    })
     
-    const plantExist = await PlantasModel.findByPk(id)
-
-    if(!plantExist){
-      throw new Error ('Id Inexistente');
+    if (plantExist && plantExist.id !== Number(id)) {
+      throw new Error('Título existente');
     }
 
-     await plantExist.update({
+    const plantToUpdate = await PlantasModel.findByPk(id)
+    
+    if(!plantToUpdate){
+      throw new Error ('Planta no encontrada');
+    }
+
+    await plantToUpdate.update({
       title,
       description,
-      imageUrl
-    })
+      imageUrl})
 
-    return {ok:true, msg:{plantExist}};
+    return {ok:true, success:true};
     
   } catch (error) {
     const errorMessage =

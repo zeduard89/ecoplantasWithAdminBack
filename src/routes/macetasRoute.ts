@@ -61,7 +61,7 @@ router.put("/updateMaceta",verifyToken, upload.single('image'), validateDimensio
       res.status(400).json(result);
       return
     }
-    res.status(200).json(true);
+    res.status(200).json(result);
       
     } catch (error) {
       const errorMessage =
