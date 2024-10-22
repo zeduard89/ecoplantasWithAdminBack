@@ -11,6 +11,8 @@ import deleteMacetaByIdController from "../controllers/deleteById/deleteMacetaBy
 
 import path from 'path';
 import fs from 'fs';
+import { MacetasModel } from "../config/db"
+
 
 const router = Router()
 
@@ -43,6 +45,24 @@ router.put("/updateMaceta",verifyToken, upload.single('image'), validateDimensio
 
     const macetaData = req.body;
 
+    // Si existe una planta con el mismo título y no es la misma, borrar la imagen anterior y devolver un error
+    const plantExist = await MacetasModel.findOne({
+      where: {
+        title: macetaData.title,
+      },
+    });
+
+  if (plantExist && plantExist.id !== Number(macetaData.id)) {
+          const imageToDelete = `/${macetaData.category}/${req.file?.filename}`
+          const filePath = path.resolve(__dirname, '..', 'storage'+imageToDelete);
+          console.log(filePath)
+          if(fs.existsSync(filePath)) {
+              fs.unlinkSync(filePath);
+          }
+      return res.status(400).json({ errorMessage: 'Título existente' });
+    }
+
+
     if(!req.file || req.file === undefined){
       macetaData.imageUrl = req.body.oldImageUrl
     }else{
@@ -58,15 +78,14 @@ router.put("/updateMaceta",verifyToken, upload.single('image'), validateDimensio
     const result: IErrrorMessage = await updateMacetaController(macetaData )
           
     if(result.errorMessage){
-      res.status(400).json(result);
-      return
+      return res.status(400).json(result);
     }
-    res.status(200).json(result);
+      return res.status(200).json(result);
       
     } catch (error) {
       const errorMessage =
       (error as Error).message
-    res.status(400).send(errorMessage)
+      return res.status(400).send(errorMessage)
     }
   }) 
 

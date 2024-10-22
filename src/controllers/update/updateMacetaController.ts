@@ -9,15 +9,6 @@ const updatePlantasController = async (macetasData?: IMacetas): Promise<object> 
 
     const {id,title,description,boca,base,altura,peso,capacidad, imageUrl} = macetasData
     
-    const macetaExist = await MacetasModel.findOne({
-      where:{
-        title
-      }
-    })
-    
-    if (macetaExist && macetaExist.id !== Number(id)) {
-      throw new Error('Título existente');
-    }
 
     const macetaToUpdate = await MacetasModel.findByPk(id)
     

@@ -11,6 +11,8 @@ import deleteMaceteroByIdController from '../controllers/deleteById/deleteMacete
 
 import path from 'path';
 import fs from 'fs';
+import { MaceterosModel } from "../config/db"
+
 
 const router = Router()
 
@@ -41,12 +43,28 @@ router.put("/updateMacetero",verifyToken, upload.single('image'), validateDimens
   try {
   
     const maceteroData = req.body;
+
+    // Si existe una planta con el mismo título y no es la misma, borrar la imagen anterior y devolver un error
+    const maceteroExist = await MaceterosModel.findOne({
+      where: {
+        title: maceteroData.title,
+      },
+    });
+
+  if (maceteroExist && maceteroExist.id !== Number(maceteroData.id)) {
+          const imageToDelete = `/${maceteroData.category}/${req.file?.filename}`
+          const filePath = path.resolve(__dirname, '..', 'storage'+imageToDelete);
+          console.log(filePath)
+          if(fs.existsSync(filePath)) {
+              fs.unlinkSync(filePath);
+          }
+      return res.status(400).json({ errorMessage: 'Título existente' });
+    }
     
     if(!req.file || req.file === undefined){
       maceteroData.imageUrl = req.body.oldImageUrl
     }else{
       maceteroData.imageUrl = `${SERVER_URL}/${maceteroData.category}/${req.file?.filename}`
-      
       // Como existe una imagen en File, Borro la imagen anterior
       const imageToDelete = req.body.oldImageUrl.split(`${SERVER_URL}`)[1]
       const filePath = path.resolve(__dirname, '..', 'storage'+imageToDelete);
@@ -58,14 +76,14 @@ router.put("/updateMacetero",verifyToken, upload.single('image'), validateDimens
     const result: IErrrorMessage = await updateMaceterosController(maceteroData )
             
     if(result.errorMessage){
-      res.status(400).json(result);
-      return
+      return res.status(400).json(result);
+      
     }
-    res.status(200).json(true);
+    return res.status(200).json(result);
       
   } catch (error) {
     const errorMessage = (error as Error).message
-    res.status(400).send(errorMessage)
+    return res.status(400).send(errorMessage)
   }
 })  
 

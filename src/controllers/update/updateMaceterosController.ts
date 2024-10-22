@@ -12,7 +12,7 @@ const updateMaceterosController = async (maceteroData?: IMaceteros): Promise<obj
     const maceteroExist = await MaceterosModel.findByPk(id)
 
     if(!maceteroExist){
-      throw new Error ('Id Inexistente');
+      throw new Error ('Macetero no encontrada');
     }
 
     await maceteroExist.update({
@@ -24,7 +24,7 @@ const updateMaceterosController = async (maceteroData?: IMaceteros): Promise<obj
       imageUrl
     })
 
-    return {ok:true, msg:{maceteroExist}};
+    return {ok:true, success:true};
     
   } catch (error) {
     const errorMessage =
