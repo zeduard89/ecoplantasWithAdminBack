@@ -1,8 +1,6 @@
 import { PlantasModel } from "../../config/db"
 import { IPlantas} from '../../types/types'
-// import path from 'path';
-// import fs from 'fs';
-// const SERVER_URL = process.env.SERVER_URL;
+
 
 
 const updatePlantasController = async (plantData?: IPlantas): Promise<object> => {
@@ -12,16 +10,6 @@ const updatePlantasController = async (plantData?: IPlantas): Promise<object> =>
     }
 
     const {id,title,description, imageUrl} = plantData
-        
-    const plantExist = await PlantasModel.findOne({
-      where:{
-        title
-      }
-    })
-    
-    if (plantExist && plantExist.id !== Number(id)) {
-      throw new Error('Título existente');
-    }
 
     const plantToUpdate = await PlantasModel.findByPk(id)
     

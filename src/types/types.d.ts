@@ -30,6 +30,7 @@ export  interface IPlantas {
   imageUrl: string;
   createdAt?: Date;
   updatedAt?: Date;
+  oldImageUrl?:string;
 }
 
 export  interface IMacetas {

@@ -11,6 +11,7 @@ import deletePlantaByIdController from '../controllers/deleteById/deletePlantByI
 
 import path from 'path';
 import fs from 'fs';
+import { PlantasModel } from "../config/db"
 
 const router = Router()
 
@@ -29,7 +30,7 @@ router.post("/uploadPlant",verifyToken, upload.single('image'), validateDimensio
         res.status(400).send(result);
         return
       }
-      res.status(200).json(true);
+      res.status(200).json(result);
     } catch (error) {
       const errorMessage =
         (error as Error).message
@@ -42,6 +43,24 @@ router.put("/updatePlant",verifyToken, upload.single('image'), validateDimension
 
     const plantData = req.body;
 
+    // Si existe una planta con el mismo título y no es la misma, borrar la imagen anterior y devolver un error
+    const plantExist = await PlantasModel.findOne({
+        where: {
+          title: plantData.title,
+        },
+      });
+
+    if (plantExist && plantExist.id !== Number(plantData.id)) {
+            const imageToDelete = `/${plantData.category}/${req.file?.filename}`
+            const filePath = path.resolve(__dirname, '..', 'storage'+imageToDelete);
+            console.log(filePath)
+            if(fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+        return res.status(400).json({ errorMessage: 'Título existente' });
+      }
+
+    // Gestion de imagen si el titulo no existe
     if(!req.file || req.file === undefined){
       plantData.imageUrl = req.body.oldImageUrl
     }else{
@@ -61,14 +80,14 @@ router.put("/updatePlant",verifyToken, upload.single('image'), validateDimension
       res.status(400).json(result);
       return
       }
-       res.status(200).json(result);
+       return res.status(200).json(result);
 
       
       
     } catch (error) {
       const errorMessage =
       (error as Error).message
-    res.status(400).send(errorMessage)
+    return res.status(400).send(errorMessage)
     }
   })    
 

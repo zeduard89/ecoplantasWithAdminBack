@@ -9,13 +9,23 @@ const updatePlantasController = async (macetasData?: IMacetas): Promise<object> 
 
     const {id,title,description,boca,base,altura,peso,capacidad, imageUrl} = macetasData
     
-    const macetaExist = await MacetasModel.findByPk(id)
-
-    if(!macetaExist){
-      throw new Error ('Id Inexistente');
+    const macetaExist = await MacetasModel.findOne({
+      where:{
+        title
+      }
+    })
+    
+    if (macetaExist && macetaExist.id !== Number(id)) {
+      throw new Error('Título existente');
     }
 
-    await macetaExist.update({
+    const macetaToUpdate = await MacetasModel.findByPk(id)
+    
+    if(!macetaToUpdate){
+      throw new Error ('Maceta no encontrada');
+    }
+
+    await macetaToUpdate.update({
       title,
       description,
       boca,
@@ -26,7 +36,7 @@ const updatePlantasController = async (macetasData?: IMacetas): Promise<object> 
       imageUrl
     })
 
-    return {ok:true, msg:{macetaExist}};
+    return {ok:true, success:true};
     
   } catch (error) {
     const errorMessage =
