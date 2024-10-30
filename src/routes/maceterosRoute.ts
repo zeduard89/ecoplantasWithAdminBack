@@ -54,7 +54,6 @@ router.put("/updateMacetero",verifyToken, upload.single('image'), validateDimens
   if (maceteroExist && maceteroExist.id !== Number(maceteroData.id)) {
           const imageToDelete = `/${maceteroData.category}/${req.file?.filename}`
           const filePath = path.resolve(__dirname, '..', 'storage'+imageToDelete);
-          console.log(filePath)
           if(fs.existsSync(filePath)) {
               fs.unlinkSync(filePath);
           }

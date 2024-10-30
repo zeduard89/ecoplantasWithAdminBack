@@ -55,7 +55,6 @@ router.put("/updateMaceta",verifyToken, upload.single('image'), validateDimensio
   if (plantExist && plantExist.id !== Number(macetaData.id)) {
           const imageToDelete = `/${macetaData.category}/${req.file?.filename}`
           const filePath = path.resolve(__dirname, '..', 'storage'+imageToDelete);
-          console.log(filePath)
           if(fs.existsSync(filePath)) {
               fs.unlinkSync(filePath);
           }
