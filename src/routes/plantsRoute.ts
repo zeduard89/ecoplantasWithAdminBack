@@ -51,8 +51,8 @@ router.put("/updatePlant",verifyToken, upload.single('image'), validateDimension
       });
 
     // console.log(plantData.id)
-    // console.log(plantExist?.dataValues.id)
-    // if (plantExist && plantExist.id !== Number(plantData.id)) {
+    console.log(plantExist?.dataValues.id)
+    if (plantExist && plantExist.id !== Number(plantData.id)) {
     if (plantExist && Number(plantExist?.dataValues.id) !== Number(plantData.id)) {
             const imageToDelete = `/${plantData.category}/${req.file?.filename}`
             const filePath = path.resolve(__dirname, '..', 'storage'+imageToDelete);
