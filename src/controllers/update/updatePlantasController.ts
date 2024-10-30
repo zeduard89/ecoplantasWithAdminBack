@@ -31,4 +31,5 @@ const updatePlantasController = async (plantData?: IPlantas): Promise<object> =>
   }
 }
 
+
 export default updatePlantasController
